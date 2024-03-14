@@ -11,14 +11,10 @@ in {
 	# Hardware
 		hardware.deviceTree.enable = true; # deviceTree is critical for the kernel to know what to do with the device
 
-	# Boot Management
-		boot.loader.systemd-boot.enable = true;
-		boot.loader.systemd-boot.editor = false; # Can be used to inject commands in the OS, considered a security vulnerability
-		boot.loader.efi.canTouchEfiVariables = false; # TowBoot doesn't do that according to samueldr (the creator)
-
 	# Plymouth
 		# FIXME-QA(Krey): Include OLIMEX's logo
 		boot.plymouth.enable = true;
+		# boot.plymouth.logo  ...
 
 	# Kernel Params
 		boot.kernelParams = [

@@ -5,8 +5,8 @@
 		self.inputs.nixos-generators.nixosModules.all-formats
 
 		./hardware-configuration.nix
-		./power-management.nix
-		./kernel.nix
+		# ./power-management.nix
+		# ./kernel.nix
 
 		# Blocked-by(Krey): https://github.com/nix-community/nixos-generators/issues/317
 		# ./generators/sd-aarch64.nix

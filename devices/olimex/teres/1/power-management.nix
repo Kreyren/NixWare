@@ -25,7 +25,7 @@ in {
 				curtime=$(date +%s)
 				echo "$curtime $1" >> /tmp/autohibernate.log
 				echo "$curtime" > "$HIBERNATE_LOCK"
-				${self.inputs.nixpkgs.utillinux}/bin/rtcwake -m no -s "$HIBERNATE_SECONDS"
+				${self.inputs.nixpkgs.legacyPackages.aarch64-linux.utillinux}/bin/rtcwake -m no -s "$HIBERNATE_SECONDS"
 			else
 				echo "System is on AC power, skipping wake-up scheduling for hibernation." >> /tmp/autohibernate.log
 			fi
