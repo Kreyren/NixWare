@@ -5,7 +5,7 @@
 		self.inputs.nixos-generators.nixosModules.all-formats
 
 		./hardware-configuration.nix
-		# ./power-management.nix
+		./autohibernate.nix
 		# ./kernel.nix
 
 		# Blocked-by(Krey): https://github.com/nix-community/nixos-generators/issues/317

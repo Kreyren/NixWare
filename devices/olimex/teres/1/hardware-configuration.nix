@@ -9,24 +9,25 @@ let
 		mkForce;
 in {
 	# Hardware
-		hardware.deviceTree.enable = true; # deviceTree is critical for the kernel to know what to do with the device
+		hardware.deviceTree.enable = true; # deviceTree is critical for the kernel to know what to do with the device, required `mkForce` to override
 
 	# Plymouth
 		# FIXME-QA(Krey): Include OLIMEX's logo
-		boot.plymouth.enable = true;
+		boot.plymouth.enable = mkDefault true;
 		# boot.plymouth.logo  ...
 
 	# Kernel Params
-		boot.kernelParams = [
+		boot.kernelParams = mkDefault [
+			# Enable the Serial Console
 			"console=ttyS0,115200n8"
 			"console=tty0"
+
 			"cma=256M" # 125 to prevent crashes in GNOME, 256 are needed for decoding H.264 videos with CEDRUS
 		];
 
 	# InitRD
-		boot.initrd.systemd.enable = true;
-		boot.initrd.availableKernelModules = [
-			"usbhid" # for USB
+		boot.initrd.availableKernelModules = mkDefault [
+			"usbhid" # For USB Support during initrd e.g. external mouse and keyboard
 
 			# Needed for display to work during initrd phase -- https://linux-sunxi.org/Olimex_Teres-A64#Display
 			"sun4i-drm"
@@ -43,35 +44,13 @@ in {
 			"analogix_dp"
 		];
 
-		# FIXME-UPSTREAM(Krey): This is not enough to get working display in initrd, discuss including the modules above by default
+		# FIXME-UPSTREAM(Krey): This is not enough to get working display in initrd, discuss including the modules above by default, thus required to be mkForced to change
 		boot.initrd.includeDefaultModules = false; # Not optimized for the device
 
-	# Sound
-		sound.enable = true; # Only meant for ALSA-based systems? (https://nixos.wiki/wiki/PipeWire)
-		hardware.pulseaudio = {
-			enable = mkIf config.services.pipewire.enable false; # PipeWire expects this set to false
-			package = pkgs.pulseaudioFull;
-		};
-		security.rtkit.enable = true;
-		services.pipewire = {
-			enable = true;
-			audio.enable = true; # Use PipeWire as the primary sound server
-			alsa.enable = true;
-			alsa.support32Bit = false; # TBD
-			pulse.enable = true;
-			jack.enable = true;
-		};
-
-	# Printing
-		services.printing.enable = false;
-
-	# Hardware Acceleration
-		hardware.opengl = {
-			enable = true;
-			driSupport = true;
-			# driSupport32Bit = true; # "Option driSupport32Bit only makes sense on a 64-bit system." ?
-		};
+	# Power Management
+		# NOTE(Krey): The 'ondemand' seems to be the most functional in terms of responsibility and battery life, thus changing it requires mkForce as other CPU Governors are not recommended
+		powerManagement.cpuFreqGovernor = "ondemand"; # Set CPU Governors
 
 	# Platform
-		nixpkgs.hostPlatform = "aarch64-linux";
+		nixpkgs.hostPlatform = mkDefault "aarch64-linux";
 }
